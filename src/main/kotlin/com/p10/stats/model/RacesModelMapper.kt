@@ -9,26 +9,34 @@ import org.springframework.stereotype.Component
 
 @Component
 class RacesModelMapper {
-    fun toRacesResponse(response: Map<SessionType, List<GpBaseDetails?>>): GetRacesResponse {
-        response[SessionType.RACE]
+    fun toRacesResponse(
+        year: Int,
+        sessionsByType: Map<SessionType, List<GpBaseDetails?>>,
+    ): GetRacesResponse {
+        sessionsByType[SessionType.RACE]
             .orEmpty()
             .sortedBy { it?.endDate }
             .let { races ->
                 return GetRacesResponse(
+                    year = year,
                     races =
                         races.mapIndexed { roundId, race ->
                             toRaceDetails(
                                 roundId = roundId + 1,
                                 race = checkNotNull(race) { "Race details should not be null" },
-                                sprint = response[SessionType.SPRINT]?.firstOrNull { sprint -> sprint?.circuitName == race.circuitName },
+                                sprint = sessionsByType[SessionType.SPRINT]?.firstOrNull { sprint -> sprint?.circuitName == race.circuitName },
                             )
                         },
                 )
             }
     }
 
-    fun toRaceCircuits(circuits: List<String>): GetRaceCircuitsResponse =
+    fun toRaceCircuits(
+        year: Int,
+        circuits: List<String>,
+    ): GetRaceCircuitsResponse =
         GetRaceCircuitsResponse(
+            year = year,
             circuits =
                 circuits.map {
                     CircuitRecord(name = it)

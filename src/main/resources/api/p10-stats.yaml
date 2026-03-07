@@ -5,14 +5,14 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
-  /races/{year}:
+  /races:
     get:
       summary: Get all races for calendar year
       operationId: getRaces
       parameters:
         - name: year
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: integer
       responses:
@@ -30,14 +30,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /races/{year}/circuits:
+  /races/circuits:
     get:
       summary: Get all race circuits for calendar year
       operationId: getRaceCircuits
       parameters:
         - name: year
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: integer
       responses:
@@ -60,8 +60,11 @@ components:
     GetRacesResponse:
       type: object
       required:
+        - year
         - races
       properties:
+        year:
+          type: integer
         races:
           type: array
           items:
@@ -90,8 +93,11 @@ components:
     GetRaceCircuitsResponse:
       type: object
       required:
+        - year
         - circuits
       properties:
+        year:
+          type: integer
         circuits:
           type: array
           items:
