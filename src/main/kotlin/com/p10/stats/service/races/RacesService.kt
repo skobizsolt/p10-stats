@@ -25,4 +25,9 @@ class RacesService(
                     }.flatten()
                     .groupBy({ it.first }, { it.second })
             }
+
+    fun getRaceCircuits(year: Int): List<String> =
+        getRaces(year)[SessionType.RACE]
+            .orEmpty()
+            .mapNotNull { it?.circuitName }
 }

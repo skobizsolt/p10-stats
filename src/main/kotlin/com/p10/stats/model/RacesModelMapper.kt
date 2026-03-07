@@ -1,5 +1,7 @@
 package com.p10.stats.model
 
+import com.p10.stats.generated.CircuitRecord
+import com.p10.stats.generated.GetRaceCircuitsResponse
 import com.p10.stats.generated.GetRacesResponse
 import com.p10.stats.generated.RaceDetails
 import com.p10.stats.repository.domain.GpBaseDetails
@@ -24,6 +26,14 @@ class RacesModelMapper {
                 )
             }
     }
+
+    fun toRaceCircuits(circuits: List<String>): GetRaceCircuitsResponse =
+        GetRaceCircuitsResponse(
+            circuits =
+                circuits.map {
+                    CircuitRecord(name = it)
+                },
+        )
 
     private fun toRaceDetails(
         roundId: Int,

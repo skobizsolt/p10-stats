@@ -5,13 +5,13 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
-  /races:
+  /races/{year}:
     get:
       summary: Get all races for calendar year
       operationId: getRaces
       parameters:
         - name: year
-          in: query
+          in: path
           required: true
           schema:
             type: integer
@@ -30,10 +30,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /races/{year}/circuits:
+    get:
+      summary: Get all race circuits for calendar year
+      operationId: getRaceCircuits
+      parameters:
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRaceCircuitsResponse'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     GetRacesResponse:
       type: object
+      required:
+        - races
       properties:
         races:
           type: array
@@ -59,6 +86,24 @@ components:
           type: integer
         sprintSessionKey:
           type: integer
+
+    GetRaceCircuitsResponse:
+      type: object
+      required:
+        - circuits
+      properties:
+        circuits:
+          type: array
+          items:
+            $ref: "#/components/schemas/CircuitRecord"
+
+    CircuitRecord:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
 
     Error:
       type: object
