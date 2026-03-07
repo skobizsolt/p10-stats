@@ -1,1 +1,1 @@
-rootProject.name = "stats"
+rootProject.name = "p10-stats"

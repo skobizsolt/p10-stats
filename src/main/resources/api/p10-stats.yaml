@@ -1,0 +1,72 @@
+openapi: 3.1.0
+info:
+  title: Swagger Petstore - OpenAPI 3.1
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /races:
+    get:
+      summary: Get all races for calendar year
+      operationId: getRaces
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRacesResponse'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    GetRacesResponse:
+      type: object
+      properties:
+        races:
+          type: array
+          items:
+            $ref: "#/components/schemas/RaceDetails"
+
+    RaceDetails:
+      type: object
+      properties:
+        roundId:
+          type: integer
+        circuitName:
+          type: string
+        isSpringWeekend:
+          type: boolean
+        sprintDate:
+          type: string
+          format: date
+        raceDate:
+          type: string
+          format: date
+        raceSessionKey:
+          type: integer
+        sprintSessionKey:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message

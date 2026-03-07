@@ -1,3 +1,6 @@
 spring:
   application:
     name: p10-stats
+
+openF1:
+  url: ${OPEN_F1_API_URL}
