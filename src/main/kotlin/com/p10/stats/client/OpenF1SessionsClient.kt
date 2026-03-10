@@ -20,7 +20,7 @@ class OpenF1SessionsClient(
             .uri("/sessions") { uriBuilder ->
                 uriBuilder
                     .queryParam("year", year)
-                    .queryParam("session_type", SessionType.SPRINT.value, SessionType.RACE.value)
+                    .queryParam("session_name", SessionType.SPRINT.value, SessionType.RACE.value)
                     .build()
             }.retrieve()
             .bodyToFlux<GpBaseDetails>()

@@ -1,8 +1,8 @@
 package com.p10.stats.service.races
 
 import com.p10.stats.client.OpenF1SessionsClient
-import com.p10.stats.model.SessionType
 import com.p10.stats.client.domain.GpBaseDetails
+import com.p10.stats.model.SessionType
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,17 +14,9 @@ class RacesService(
             .getGpsBasicDatailsForYear(year)
             .orEmpty()
             .sortedBy { it.endDate }
-            .groupBy { it.circuitName }
-            .let { sessionsByCircuit ->
-                sessionsByCircuit.keys
-                    .map { name ->
-                        val raceSessions = checkNotNull(sessionsByCircuit[name]) { "Race details should not be null" }
-                        listOfNotNull(
-                            if (raceSessions.size > 1) SessionType.SPRINT to raceSessions.firstOrNull() else null,
-                            SessionType.RACE to raceSessions.last(),
-                        )
-                    }.flatten()
-                    .groupBy({ it.first }, { it.second })
+            .groupBy {
+                SessionType.forValue(it.sessionName)
+                    ?: throw Exception("Session name ${it.sessionName} unrecognized!")
             }
 
     fun getRaceCircuits(year: Int): List<String> =

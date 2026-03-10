@@ -6,6 +6,8 @@ import java.time.OffsetDateTime
 data class GpBaseDetails(
     @JsonProperty("circuit_short_name")
     val circuitName: String,
+    @JsonProperty("session_name")
+    val sessionName: String,
     @JsonProperty("session_key")
     val sessionKey: Int,
     @JsonProperty("date_end")
