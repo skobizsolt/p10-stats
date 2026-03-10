@@ -4,9 +4,6 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:8080
-tags:
-  - races
-  - grid
 paths:
   /races:
     get:
@@ -33,9 +30,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
   /races/circuits:
     get:
-      summary: Get all race circuits for calendar year
+      summary: Get starting grid of the GP
       operationId: getRaceCircuits
       parameters:
         - name: year
@@ -58,7 +56,45 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /starting-grid:
+
+  /grid/finishing-order:
+    get:
+      summary: Get results for the GP
+      operationId: getRaceResults
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: circuitName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sprint
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRaceResultResponse'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /grid/starting-order:
     get:
       summary: Get all race circuits for calendar year
       operationId: getStartingGrid
@@ -152,6 +188,21 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/GridPositionData"
+    GetRaceResultResponse:
+      type: object
+      properties:
+        year:
+          type: integer
+        circuitName:
+          type: string
+        firstDnf:
+          type: array
+          items:
+            type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/FinishingPositionData"
 
     CircuitRecord:
       type: object
@@ -174,6 +225,24 @@ components:
           type: string
         driverNumber:
           type: integer
+
+    FinishingPositionData:
+      type: object
+      properties:
+        position:
+          type: integer
+        driverName:
+          type: string
+        classification:
+          $ref: "#/components/schemas/Classification"
+
+    Classification:
+      type: string
+      enum:
+        - DNS
+        - DNF
+        - DSQ
+        - FINISHED
 
     Error:
       type: object
