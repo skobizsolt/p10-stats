@@ -1,0 +1,108 @@
+openapi: 3.1.0
+info:
+  title: P10 API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /session-points:
+    post:
+      summary: List session result for each individual's tip
+      operationId: calculateSessionPoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostSessionPointsRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostSessionPointsResponse'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "./common-schema.yaml#/components/schemas/Error"
+components:
+  schemas:
+    PostSessionPointsRequest:
+      type: object
+      required:
+        - circuitName
+        - predictions
+      properties:
+        year:
+          type: integer
+        circuitName:
+          type: string
+        sprintRace:
+          type: boolean
+        predictions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Prediction'
+
+    PostSessionPointsResponse:
+      type: object
+      required:
+        - year
+        - circuitName
+        - results
+        - firstDnf
+      properties:
+        year:
+          type: integer
+        circuitName:
+          type: string
+        firstDnf:
+          type: array
+          items:
+            type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PredictionResult'
+
+    Prediction:
+      type: object
+      required:
+        - name
+        - driver
+        - dnfDriver
+      properties:
+        name:
+          type: string
+        driver:
+          type: string
+        dnfDriver:
+          type: string
+
+    PredictionResult:
+      type: object
+      required:
+        - name
+        - driverPosition
+        - predictedDriver
+        - pointsForDriver
+        - predictedDnfDriver
+        - dnfCorrect
+      properties:
+        name:
+          type: string
+        predictedDriver:
+          type: string
+        driverPosition:
+          type: integer
+        pointsForDriver:
+          type: integer
+        predictedDnfDriver:
+          type: string
+        dnfCorrect:
+          type: boolean

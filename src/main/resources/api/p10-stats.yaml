@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./common-schema.yaml#/components/schemas/Error"
 
   /races/circuits:
     get:
@@ -55,7 +55,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./common-schema.yaml#/components/schemas/Error"
 
   /grid/finishing-order:
     get:
@@ -92,7 +92,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./common-schema.yaml#/components/schemas/Error"
 
   /grid/starting-order:
     get:
@@ -129,7 +129,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./common-schema.yaml#/components/schemas/Error"
 
 components:
   schemas:
@@ -243,14 +243,3 @@ components:
         - DNF
         - DSQ
         - FINISHED
-
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-      required:
-        - code
-        - message

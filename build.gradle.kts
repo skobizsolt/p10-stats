@@ -1,3 +1,5 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
 plugins {
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.spring") version "2.2.21"
@@ -60,26 +62,46 @@ kotlin {
     }
 }
 
-openApiGenerate {
-    generatorName.set("kotlin-spring")
-    inputSpec.set("$rootDir/src/main/resources/api/p10-stats.yaml")
-    apiPackage.set("com.p10.stats.generated.api")
-    modelPackage.set("com.p10.stats.generated")
-    outputDir.set("$rootDir/build/generated")
-    configOptions.putAll(
-        mapOf(
-            "gradleBuildFile" to "false",
-            "useSpringBoot3" to "true",
-            "documentationProvider" to "none",
-            "interfaceOnly" to "true",
-        ),
+val openApis =
+    mapOf(
+        "p10-stats" to
+            mapOf(
+                "path" to "p10-stats.yaml",
+                "package" to "com.p10.stats.generated",
+            ),
+        "pointsCalculator" to
+            mapOf(
+                "path" to "points-calculator.yaml",
+                "package" to "com.p10.points.generated",
+            ),
     )
-    generateApiTests.set(false)
-}
 
 tasks {
+    openApis.forEach { (openApiName, properties) ->
+        register<GenerateTask>("generate-$openApiName") {
+            generatorName.set("kotlin-spring")
+            inputSpec.set("$rootDir/src/main/resources/api/${properties["path"]}")
+            apiPackage.set("${properties["package"]}.api")
+            modelPackage.set(properties["package"])
+            outputDir.set("$rootDir/build/generated")
+            configOptions.putAll(
+                mapOf(
+                    "gradleBuildFile" to "false",
+                    "useSpringBoot3" to "true",
+                    "documentationProvider" to "none",
+                    "interfaceOnly" to "true",
+                ),
+            )
+            generateApiTests.set(false)
+        }
+    }
+
+    register("openApis") {
+        dependsOn(openApis.keys.map { "generate-$it" })
+    }
+
     compileKotlin {
-        dependsOn("openApiGenerate")
+        dependsOn("openApis")
     }
 }
 
