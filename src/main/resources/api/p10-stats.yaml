@@ -1,9 +1,12 @@
 openapi: 3.1.0
 info:
-  title: Swagger Petstore - OpenAPI 3.1
+  title: P10 API
   version: 1.0.0
 servers:
   - url: http://localhost:8080
+tags:
+  - races
+  - grid
 paths:
   /races:
     get:
@@ -55,6 +58,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /starting-grid:
+    get:
+      summary: Get all race circuits for calendar year
+      operationId: getStartingGrid
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: circuitName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sprint
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStartingGridResponse'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     GetRacesResponse:
@@ -103,6 +143,16 @@ components:
           items:
             $ref: "#/components/schemas/CircuitRecord"
 
+    GetStartingGridResponse:
+      type: object
+      properties:
+        year:
+          type: integer
+        grid:
+          type: array
+          items:
+            $ref: "#/components/schemas/GridPositionData"
+
     CircuitRecord:
       type: object
       required:
@@ -110,6 +160,20 @@ components:
       properties:
         name:
           type: string
+
+    GridPositionData:
+      type: object
+      properties:
+        position:
+          type: integer
+        driverName:
+          type: string
+        driverAcronym:
+          type: string
+        driverTeam:
+          type: string
+        driverNumber:
+          type: integer
 
     Error:
       type: object

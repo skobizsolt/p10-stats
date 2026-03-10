@@ -1,4 +1,4 @@
-package com.p10.stats.repository.domain
+package com.p10.stats.client.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime

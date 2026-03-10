@@ -3,11 +3,11 @@ package com.p10.stats.api
 import com.p10.stats.generated.GetRaceCircuitsResponse
 import com.p10.stats.generated.GetRacesResponse
 import com.p10.stats.generated.api.RacesApi
-import com.p10.stats.model.RacesModelMapper
+import com.p10.stats.mapper.RacesModelMapper
 import com.p10.stats.service.races.RacesService
+import com.p10.stats.util.RequestProperties.getYear
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
-import java.time.LocalDate
 
 @Component
 class RacesApiController(
@@ -28,11 +28,5 @@ class RacesApiController(
         val response = racesModelMapper.toRaceCircuits(selectedYear, circuits)
 
         return ResponseEntity.ok().body(response)
-    }
-
-    private fun getYear(year: Int?): Int {
-        val selectedYear = year ?: LocalDate.now().year
-        require(selectedYear >= 2023) { "year should be greater than 2023" }
-        return selectedYear
     }
 }

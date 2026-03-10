@@ -1,10 +1,11 @@
-package com.p10.stats.model
+package com.p10.stats.mapper
 
+import com.p10.stats.client.domain.GpBaseDetails
 import com.p10.stats.generated.CircuitRecord
 import com.p10.stats.generated.GetRaceCircuitsResponse
 import com.p10.stats.generated.GetRacesResponse
 import com.p10.stats.generated.RaceDetails
-import com.p10.stats.repository.domain.GpBaseDetails
+import com.p10.stats.model.SessionType
 import org.springframework.stereotype.Component
 
 @Component
@@ -24,7 +25,10 @@ class RacesModelMapper {
                             toRaceDetails(
                                 roundId = roundId + 1,
                                 race = checkNotNull(race) { "Race details should not be null" },
-                                sprint = sessionsByType[SessionType.SPRINT]?.firstOrNull { sprint -> sprint?.circuitName == race.circuitName },
+                                sprint =
+                                    sessionsByType[SessionType.SPRINT]?.firstOrNull { sprint ->
+                                        sprint?.circuitName == race.circuitName
+                                    },
                             )
                         },
                 )

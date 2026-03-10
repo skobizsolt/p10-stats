@@ -2,7 +2,7 @@ package com.p10.stats.service.races
 
 import com.p10.stats.client.OpenF1SessionsClient
 import com.p10.stats.model.SessionType
-import com.p10.stats.repository.domain.GpBaseDetails
+import com.p10.stats.client.domain.GpBaseDetails
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,6 +12,7 @@ class RacesService(
     fun getRaces(year: Int): Map<SessionType, List<GpBaseDetails?>> =
         sessionsClient
             .getGpsBasicDatailsForYear(year)
+            .orEmpty()
             .sortedBy { it.endDate }
             .groupBy { it.circuitName }
             .let { sessionsByCircuit ->
