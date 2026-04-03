@@ -2,8 +2,10 @@ package com.p10.stats.api
 
 import com.p10.stats.generated.GetRaceCircuitsResponse
 import com.p10.stats.generated.GetRacesResponse
+import com.p10.stats.generated.RaceDetails
 import com.p10.stats.generated.api.RacesApi
 import com.p10.stats.mapper.RacesModelMapper
+import com.p10.stats.model.SessionType
 import com.p10.stats.service.races.RacesService
 import com.p10.stats.util.RequestProperties.getYear
 import org.springframework.http.ResponseEntity
@@ -18,6 +20,21 @@ class RacesApiController(
         val selectedYear = getYear(year)
         val racesBySessionType = racesService.getRaces(selectedYear)
         val response = racesModelMapper.toRacesResponse(selectedYear, racesBySessionType)
+
+        return ResponseEntity.ok().body(response)
+    }
+
+    override fun getRaceByCircuitName(
+        circuitName: String,
+        year: Int?,
+    ): ResponseEntity<RaceDetails> {
+        val selectedYear = getYear(year)
+        val raceByCircuit = racesService.getRaceByCircuitName(selectedYear, circuitName)
+        val response =
+            racesModelMapper.toRaceDetails(
+                race = checkNotNull(raceByCircuit[SessionType.RACE]) { "Race data should not be null" },
+                sprint = raceByCircuit[SessionType.SPRINT],
+            )
 
         return ResponseEntity.ok().body(response)
     }

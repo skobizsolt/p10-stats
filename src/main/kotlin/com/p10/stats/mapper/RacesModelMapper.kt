@@ -21,9 +21,8 @@ class RacesModelMapper {
                 return GetRacesResponse(
                     year = year,
                     races =
-                        races.mapIndexed { roundId, race ->
+                        races.map { race ->
                             toRaceDetails(
-                                roundId = roundId + 1,
                                 race = checkNotNull(race) { "Race details should not be null" },
                                 sprint =
                                     sessionsByType[SessionType.SPRINT]?.firstOrNull { sprint ->
@@ -47,13 +46,11 @@ class RacesModelMapper {
                 },
         )
 
-    private fun toRaceDetails(
-        roundId: Int,
+    fun toRaceDetails(
         race: GpBaseDetails,
         sprint: GpBaseDetails?,
     ): RaceDetails =
         RaceDetails(
-            roundId = roundId,
             circuitName = race.circuitName,
             isSpringWeekend = sprint != null,
             sprintDate = sprint?.endDate?.toLocalDate(),

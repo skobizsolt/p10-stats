@@ -31,6 +31,37 @@ paths:
               schema:
                 $ref: "./common-schema.yaml#/components/schemas/Error"
 
+  /races/{circuitName}:
+    get:
+      summary: Get all races for calendar year
+      operationId: getRaceByCircuitName
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: circuitName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RaceDetails'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "./common-schema.yaml#/components/schemas/Error"
+
   /races/circuits:
     get:
       summary: Get starting grid of the GP
@@ -149,8 +180,6 @@ components:
     RaceDetails:
       type: object
       properties:
-        roundId:
-          type: integer
         circuitName:
           type: string
         isSpringWeekend:
