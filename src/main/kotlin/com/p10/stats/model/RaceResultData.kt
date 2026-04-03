@@ -8,13 +8,17 @@ data class RaceResultData(
     val driversData: List<GpDriverInfo>,
     val firstDnfs: List<String>,
 ) {
-    fun driver(driver: String): GpDriverInfo =
+    private fun driver(driverName: String): GpDriverInfo =
         driversData
-            .firstOrNull { it.driverName.uppercase().contains(driver.uppercase()) }
-            ?: throw Exception("Driver $driver not found")
+            .firstOrNull { it.driverName.uppercase().contains(driverName.uppercase()) }
+            ?: throw Exception("Driver $driverName not found")
 
-    fun driverPosition(driver: String): Int =
+    fun driverName(driver: String): String =
         driver(driver)
+            .driverName
+
+    fun driverPosition(driverName: String): Int =
+        driver(driverName)
             .let { predictedDriver ->
                 finishingPositions
                     .firstOrNull { it.driverNumber == predictedDriver.driverNumber }

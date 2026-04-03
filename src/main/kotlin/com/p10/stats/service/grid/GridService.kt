@@ -40,7 +40,7 @@ class GridService(
     fun getRaceResults(
         circuitName: String,
         year: Int,
-        sprintGrid: Boolean,
+        sprintGrid: Boolean = false,
     ): RaceResultData {
         val raceType = if (sprintGrid) SessionType.SPRINT else SessionType.RACE
 

@@ -42,8 +42,6 @@ components:
           type: integer
         circuitName:
           type: string
-        sprintRace:
-          type: boolean
         predictions:
           type: array
           items:
@@ -65,44 +63,60 @@ components:
           type: array
           items:
             type: string
-        results:
+        gpResults:
           type: array
           items:
-            $ref: '#/components/schemas/PredictionResult'
+            $ref: '#/components/schemas/GpPredictionResult'
 
     Prediction:
       type: object
       required:
         - name
-        - driver
-        - dnfDriver
       properties:
         name:
           type: string
-        driver:
+        sprintDriver:
+          type: string
+        raceDriver:
           type: string
         dnfDriver:
           type: string
 
-    PredictionResult:
+    GpPredictionResult:
       type: object
       required:
         - name
-        - driverPosition
-        - predictedDriver
-        - pointsForDriver
-        - predictedDnfDriver
-        - dnfCorrect
       properties:
         name:
           type: string
-        predictedDriver:
+        sprintResult:
+          $ref: '#/components/schemas/SessionResult'
+        raceResult:
+          $ref: '#/components/schemas/SessionResult'
+        dnfResult:
+          $ref: '#/components/schemas/DnfResult'
+
+    SessionResult:
+      type: object
+      required:
+        - driver
+        - position
+        - points
+      properties:
+        driver:
           type: string
-        driverPosition:
+        position:
           type: integer
-        pointsForDriver:
+        points:
           type: integer
-        predictedDnfDriver:
+
+    DnfResult:
+      type: object
+      required:
+        - driver
+        - isFirstDnf
+      properties:
+        driver:
           type: string
-        dnfCorrect:
+        isFirstDnf:
           type: boolean

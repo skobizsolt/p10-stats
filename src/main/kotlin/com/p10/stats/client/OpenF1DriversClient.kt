@@ -2,10 +2,12 @@ package com.p10.stats.client
 
 import com.p10.stats.client.domain.GpDriverInfo
 import com.p10.stats.config.OPEN_F1_CLIENT
+import com.p10.stats.util.delayNextRequest
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToFlux
+import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
 class OpenF1DriversClient(
@@ -19,7 +21,7 @@ class OpenF1DriversClient(
                     .queryParam("session_key", sessionKey)
                     .build()
             }.retrieve()
-            .bodyToFlux<GpDriverInfo>()
-            .collectList()
+            .bodyToMono<List<GpDriverInfo>>()
             .block()
+            .delayNextRequest()
 }

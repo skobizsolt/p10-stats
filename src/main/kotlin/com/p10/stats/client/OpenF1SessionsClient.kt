@@ -5,10 +5,11 @@ import com.p10.stats.client.domain.GpGridInfo
 import com.p10.stats.client.domain.GpTrackScheduleDetails
 import com.p10.stats.config.OPEN_F1_CLIENT
 import com.p10.stats.model.SessionType
+import com.p10.stats.util.delayNextRequest
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToFlux
+import org.springframework.web.reactive.function.client.bodyToMono
 import java.util.Optional
 
 @Component
@@ -28,9 +29,9 @@ class OpenF1SessionsClient(
                     .queryParam("session_name", SessionType.SPRINT.value, SessionType.RACE.value)
                     .build()
             }.retrieve()
-            .bodyToFlux<GpBaseDetails>()
-            .collectList()
+            .bodyToMono<List<GpBaseDetails>>()
             .block()
+            .delayNextRequest()
 
     fun getTrackScheduleDetails(
         year: Int,
@@ -44,9 +45,9 @@ class OpenF1SessionsClient(
                     .queryParam("location", location)
                     .build()
             }.retrieve()
-            .bodyToFlux<GpTrackScheduleDetails>()
-            .collectList()
+            .bodyToMono<List<GpTrackScheduleDetails>>()
             .block()
+            .delayNextRequest()
 
     fun getStartingGrid(sessionKey: Int): List<GpGridInfo>? =
         webClient
@@ -56,7 +57,7 @@ class OpenF1SessionsClient(
                     .queryParam("session_key", sessionKey)
                     .build()
             }.retrieve()
-            .bodyToFlux<GpGridInfo>()
-            .collectList()
+            .bodyToMono<List<GpGridInfo>>()
             .block()
+            .delayNextRequest()
 }
